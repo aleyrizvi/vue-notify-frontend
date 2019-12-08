@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { addTodo, populateData } from '@/api.js'
+import { addTodo, populateData, completeTask } from '@/api.js'
 
 Vue.use(Vuex)
 
@@ -24,6 +24,10 @@ const store = new Vuex.Store({
     },
     todos_setInitial(state, todos){
       state.todos.push(...todos)
+    },
+    todo_complete(state, id){
+      let index = state.todos.findIndex((item => item.ID === id))
+      state.todos[index].completed = true
     }
   },
   actions: {
@@ -42,6 +46,14 @@ const store = new Vuex.Store({
 
       commit('note_setInitial', notes)
       commit('todos_setInitial', todos)
+    },
+    async complete_todo({ commit }, ID){
+      //TODO: Add localstorage in future.
+     let result = await completeTask(ID)
+
+     if (result){
+      commit('todo_complete', ID)
+     }
     }
   },
   modules: {

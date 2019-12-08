@@ -15,6 +15,13 @@ export const populateData = async () => {
   if (result.code === 200) return result.data
 }
 
+export const completeTask = async (id) => {
+  const URL = `https://78tw5n1d1j.execute-api.us-east-1.amazonaws.com/dev/${id}`
+  
+  let result = await _apiCall(URL,'PATCH')
+  if (result.code === 200) return result.data
+}
+
 const _apiCall = async (url ='',method='POST', data ={}) => {
   
   let param = {

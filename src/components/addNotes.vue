@@ -5,6 +5,7 @@
     <a href="#" @click="add" class="btn">Add a note </a> | 
     <a href="#" @click="switchView">Add todo instead?</a>
   </div>
+
   <div v-else>
     <h2>Add a new todo</h2>
     <p><input type=text v-model="message" /></p>
@@ -24,11 +25,15 @@ export default {
     }
   },
   methods: {
+    //Switch view for note or todo
     switchView(){
       this.message=""
       this.view = !this.view
     },
+    
+    //dispatching 
     add(){
+      if (this.message.length === 0) return
       let type = (this.view) ? 'note' : 'todo' 
       this.$store.dispatch('add', {
         message: this.message,

@@ -1,10 +1,10 @@
 <template>
     <div>
-      <h2>My Todos</h2>
+      <h2>My Todos (<a href="#" @click.prevent="filterTodo">{{showFilter}}</a>)</h2>
     <div v-if="todos.length">
       <div class="todo" v-for="todo in todos" v-bind:key="todo.id">
-        <p><a href="#" class="delete" @click.prevent="markComplete(todo.id)">✓</a> {{todo.message}}</p>
-        <p class="date">created: {{formateDate(todo.created_at)}}</p>
+        <p><a href="#" class="delete" @click.prevent="markComplete(todo.ID)">✓</a> {{todo.message}}</p>
+        <p class="date">created: {{formateDate(todo.created_at)}} | status: {{status(todo.completed)}}</p>
         
       </div>
     </div>  
@@ -20,19 +20,33 @@
 
 export default {
   name:"todos-view",
+  data: function(){
+    return {
+      showAll: false,
+      showFilter: "Open"
+    }
+  },
   computed: {
     todos(){
-      return this.$store.state.todos;
+      return this.$store.state.todos
+              .filter (todo => this.showAll ? true : !todo.completed)
     }
   },
   methods: {
+    filterTodo(){
+      this.showAll = !this.showAll
+      this.showFilter = this.showAll ? "All" : "Open"
+    },
     formateDate(date){
       let d = new Date(0)
       d.setUTCSeconds(date)
       return d.toLocaleString()
     },
     markComplete(id){
-      console.log(id)
+      this.$store.dispatch('complete_todo', id)
+    },
+    status(status){
+      return (status) ? "Completed" : "Open"
     }
   }
 }

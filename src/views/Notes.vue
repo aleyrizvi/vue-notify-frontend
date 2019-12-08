@@ -35,7 +35,7 @@ export default {
   display: grid;
   grid-template-areas: "note-add note-add" "checklist notes";
   min-height: 100vh;
-  grid-auto-rows: 50%;
+  grid-auto-rows: 250px auto auto;
   margin: 0 8%;
 
 }
