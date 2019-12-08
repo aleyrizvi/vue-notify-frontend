@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { addTodo } from '@/api.js'
+import { addTodo, populateData } from '@/api.js'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+
+
+const store = new Vuex.Store({
   state: {
     notes: [],
     todos: []
@@ -16,6 +18,12 @@ export default new Vuex.Store({
 
     todo_add(state, todo){
       state.todos.push(todo)
+    },
+    note_setInitial(state, notes){
+      state.notes.push(...notes)
+    },
+    todos_setInitial(state, todos){
+      state.todos.push(...todos)
     }
   },
   actions: {
@@ -25,8 +33,32 @@ export default new Vuex.Store({
       let commit_name = (item.type === "note") ? "note_add" : "todo_add"
       commit(commit_name,item)
 
+    },
+    async INITIALISE({ commit }){
+      console.log("inside initalise", commit)
+      let data = await populateData()
+      let notes = data.filter(item => item.type === "note")
+      let todos = data.filter(item => item.type === "todo")
+
+      commit('note_setInitial', notes)
+      commit('todos_setInitial', todos)
     }
   },
   modules: {
   }
 })
+
+// store.subscribe((mutation, state) => {
+  
+//     /*
+//     TODO:
+//     - set Localstorage
+//     - use modules and namespacing
+//     - call initialise on all modules and namespacing
+//     - fetch Localstorage and prefilled state
+//     */
+// })
+
+store.dispatch('INITIALISE')
+
+export default store
